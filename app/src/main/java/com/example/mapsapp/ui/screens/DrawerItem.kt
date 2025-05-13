@@ -12,5 +12,5 @@ enum class DrawerItem(
     val route: Destination
 ) {
     MAP(Icons.Default.LocationOn, "Home", Destination.Map),
-    LIST(Icons.Default.List, "Settings", Destination.List)
+    LIST(Icons.Default.List, "List", Destination.List)
 }

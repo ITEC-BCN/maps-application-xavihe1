@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.DrawerValue
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalDrawerSheet
@@ -24,13 +25,13 @@ import androidx.navigation.compose.rememberNavController
 import com.example.mapsapp.ui.navigation.NavigationWrapper
 import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MyDrawerMenu() {
     val navController = rememberNavController()
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     var selectedItemIndex by remember { mutableStateOf(0) }
-    ModalNavigationDrawer()
 
     ModalNavigationDrawer(
         gesturesEnabled = false,
@@ -55,7 +56,7 @@ fun MyDrawerMenu() {
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { Text("Awesome App") },
+                    title = { Text("Abdul Map") },
                     navigationIcon = {
                         IconButton(onClick = { scope.launch { drawerState.open() } }) {
                             Icon(imageVector = Icons.Default.Menu, contentDescription = "Menu")
@@ -64,7 +65,7 @@ fun MyDrawerMenu() {
                 )
             }
         ) { innerPadding ->
-            NavigationWrapper()
+            NavigationWrapper(navController, Modifier.padding(innerPadding))
         }
 
     }
