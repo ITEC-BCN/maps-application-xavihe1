@@ -4,6 +4,8 @@ import kotlinx.serialization.Serializable
 
 sealed class Destination {
     @Serializable
+    object PermissionScreen: Destination() //Permisos
+    @Serializable
     object Map: Destination() //Mapa
 
     @Serializable

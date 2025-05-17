@@ -18,7 +18,10 @@ fun MapScreen() {
         }
         GoogleMap(
             modifier = Modifier.fillMaxSize(),
-            cameraPositionState = cameraPositionState
+            cameraPositionState = cameraPositionState,
+            onMapLongClick = {
+
+            }
         )
     }
 }

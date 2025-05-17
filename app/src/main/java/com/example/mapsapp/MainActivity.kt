@@ -13,14 +13,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.mapsapp.ui.screens.MyDrawerMenu
 import com.example.mapsapp.ui.theme.MapsAppTheme
+import com.example.mapsapp.viewmodels.MyViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        val viewModel = MyViewModel()
         setContent {
             MapsAppTheme {
-                MyDrawerMenu()
+                MyDrawerMenu(viewModel)
             }
         }
     }

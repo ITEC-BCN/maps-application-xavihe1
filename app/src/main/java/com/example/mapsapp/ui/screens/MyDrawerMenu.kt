@@ -23,11 +23,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.example.mapsapp.ui.navigation.NavigationWrapper
+import com.example.mapsapp.viewmodels.MyViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyDrawerMenu() {
+fun MyDrawerMenu(myViewModel: MyViewModel) {
     val navController = rememberNavController()
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -65,7 +66,7 @@ fun MyDrawerMenu() {
                 )
             }
         ) { innerPadding ->
-            NavigationWrapper(navController, Modifier.padding(innerPadding))
+            NavigationWrapper(navController, Modifier.padding(innerPadding), myViewModel)
         }
 
     }
