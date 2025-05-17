@@ -1,5 +1,8 @@
 package com.example.mapsapp.viewmodels
 
+import android.graphics.Bitmap
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.mapsapp.data.Marker
@@ -8,6 +11,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.ByteArrayOutputStream
 
 class MyViewModel: ViewModel() {
     val database = MyApp.database
@@ -21,10 +25,13 @@ class MyViewModel: ViewModel() {
     private val _markerLongitude = MutableLiveData<String>()
     val markerLongitude = _markerLongitude
 
-    fun insertNewMarker(name: String, description: String, latitude: String, longitude: String) {
-        val newMarker = Marker(name = name, description = description, latitude = latitude.toDouble(), longitude = longitude.toDouble())
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun insertNewMarker(name: String, description: String, image: Bitmap?) {
+        val stream = ByteArrayOutputStream()
+        image?.compress(Bitmap.CompressFormat.PNG, 0, stream)
         CoroutineScope(Dispatchers.IO).launch {
-            database.insertMarker(newMarker)
+            val imageName = database.uploadImage(stream.toByteArray())
+            database.insertMarker(name, description, 0.0, 0.0, imageName)
             getAllMarkers()
         }
     }
@@ -51,18 +58,25 @@ class MyViewModel: ViewModel() {
     }
 
     //Funció UPDATE marker
-    private var _selectedMarker: Marker? = null
-    fun updateStudent(id: String, name: String, description: String, longitude: String, latitude: String){
+    private val _selectedMarker = MutableLiveData<Marker?>()
+    val selectedStudent = _selectedMarker
+
+    fun updateStudent(id: String, name: String, description: String, image: Bitmap?){
+        val stream = ByteArrayOutputStream()
+        image?.compress(Bitmap.CompressFormat.PNG, 0, stream)
+        val imageName = _selectedMarker.value?.image?.removePrefix("https://aobflzinjcljzqpxpcxs.supabase.co/storage/v1/object/public/images/")
         CoroutineScope(Dispatchers.IO).launch {
-            database.updateMarker(id, name, description, longitude.toDouble(), latitude.toDouble())
+            database.updateMarker(id, name, description, 0.0, 0.0, imageName.toString(), stream.toByteArray())
         }
     }
-    fun getStudent(id: String){
-        if(_selectedMarker == null){
+
+
+    fun getMarker(id: String){
+        if(_selectedMarker.value == null){
             CoroutineScope(Dispatchers.IO).launch {
                 val student = database.getMarker(id)
                 withContext(Dispatchers.Main) {
-                    _selectedMarker = student
+                    _selectedMarker.value = student
                     _markerName.value = student.name
                     _markerDescription.value = student.description
                 }
@@ -71,12 +85,25 @@ class MyViewModel: ViewModel() {
     }
 
     //Funció DELETE marker
-    fun deleteMarker(id: String){
+    fun deleteMarker(id: String, image: String){
         CoroutineScope(Dispatchers.IO).launch {
+            database.deleteImage(image)
             database.deleteMarker(id)
             getAllMarkers()
         }
     }
+
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun insertNewMarker(name: String, description: String, longitude: String, latitude: String, image: Bitmap?) {
+        val stream = ByteArrayOutputStream()
+        image?.compress(Bitmap.CompressFormat.PNG, 0, stream)
+        CoroutineScope(Dispatchers.IO).launch {
+            val imageName = database.uploadImage(stream.toByteArray())
+            database.insertMarker(name, description, longitude.toDouble(), latitude.toDouble(), imageName)
+        }
+    }
+
 
 
 

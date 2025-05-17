@@ -15,7 +15,7 @@ import com.example.mapsapp.viewmodels.MyViewModel
 
 @Composable
 fun DetailMarkerScreen(markerId: String, myViewModel: MyViewModel){
-    myViewModel.getStudent(markerId)
+    myViewModel.getMarker(markerId)
     val markerName: String by myViewModel.markerName.observeAsState("")
     val markerDescription: String by myViewModel.markerDescription.observeAsState("")
 
@@ -28,7 +28,7 @@ fun DetailMarkerScreen(markerId: String, myViewModel: MyViewModel){
         TextField(value = markerName, onValueChange = { myViewModel.editMarkerName(it) })
         TextField(value = markerDescription, onValueChange = { myViewModel.editMarkerDescription(it) })
         Button(onClick = {
-            myViewModel.updateStudent(markerId, markerName, markerDescription, "0.0", "0.0") }
+            myViewModel.updateStudent(markerId, markerName, markerDescription, null) }
         ) {
             Text("Update")
         }

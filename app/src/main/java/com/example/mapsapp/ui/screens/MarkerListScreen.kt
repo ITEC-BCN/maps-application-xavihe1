@@ -45,7 +45,7 @@ fun MarkerListScreen(myViewModel: MyViewModel) {
                 if (dismissState.currentValue == SwipeToDismissBoxValue.EndToStart &&
                     dismissState.targetValue == SwipeToDismissBoxValue.EndToStart) {
                     LaunchedEffect(Unit) {
-                        myViewModel.deleteMarker(marker.id.toString())
+                        myViewModel.deleteMarker(marker.id.toString(), marker.image.toString())
                     }
                 }
                 SwipeToDismissBox(state = dismissState, backgroundContent = {
