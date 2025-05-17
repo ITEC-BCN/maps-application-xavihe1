@@ -27,7 +27,7 @@ fun NavigationWrapper(navController: NavHostController, padding: Modifier, myVie
             MarkerListScreen(myViewModel)
         }
         composable<Destination.Markers> {
-            CreateMarkerScreen()
+            CreateMarkerScreen(myViewModel)
         }
     }
 }
