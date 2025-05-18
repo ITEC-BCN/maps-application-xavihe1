@@ -1,5 +1,7 @@
 package com.example.mapsapp.ui.screens
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
@@ -23,12 +25,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.example.mapsapp.ui.navigation.NavigationWrapper
+import com.example.mapsapp.viewmodels.AuthViewModel
 import com.example.mapsapp.viewmodels.MyViewModel
 import kotlinx.coroutines.launch
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyDrawerMenu(myViewModel: MyViewModel) {
+fun MyDrawerMenu(myViewModel: MyViewModel, authViewModel: AuthViewModel) {
     val navController = rememberNavController()
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -57,7 +61,7 @@ fun MyDrawerMenu(myViewModel: MyViewModel) {
         Scaffold(
             topBar = {
                 TopAppBar(
-                    title = { Text("Abdul Map") },
+                    title = { Text("Maps App") },
                     navigationIcon = {
                         IconButton(onClick = { scope.launch { drawerState.open() } }) {
                             Icon(imageVector = Icons.Default.Menu, contentDescription = "Menu")
@@ -66,7 +70,7 @@ fun MyDrawerMenu(myViewModel: MyViewModel) {
                 )
             }
         ) { innerPadding ->
-            NavigationWrapper(navController, Modifier.padding(innerPadding), myViewModel)
+            NavigationWrapper(navController, Modifier.padding(innerPadding), myViewModel, authViewModel)
         }
 
     }

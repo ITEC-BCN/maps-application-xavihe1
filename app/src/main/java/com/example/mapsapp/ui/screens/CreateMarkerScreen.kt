@@ -29,7 +29,7 @@ import com.example.mapsapp.R
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun CreateMarkerScreen(myViewModel: MyViewModel){
+fun CreateMarkerScreen(myViewModel: MyViewModel, navigateCamera: () -> Unit){
     val markerName: String by myViewModel.markerName.observeAsState("")
     val markerDescription: String by myViewModel.markerDescription.observeAsState("")
     val bitmap = remember { mutableStateOf<Bitmap?>(null) }
@@ -44,7 +44,7 @@ fun CreateMarkerScreen(myViewModel: MyViewModel){
         TextField(
             value = markerName,
             onValueChange = { myViewModel.editMarkerName(it) },
-            label = { "Name: " }
+            label = { Text("Name: ") }
         )
 
         Spacer(modifier = Modifier.height(15.dp))
@@ -52,7 +52,7 @@ fun CreateMarkerScreen(myViewModel: MyViewModel){
         TextField(
             value = markerDescription,
             onValueChange = { myViewModel.editMarkerDescription(it) },
-            label = { "Description: " }
+            label = { Text("Description: ") }
         )
 
         Spacer(modifier = Modifier.height(15.dp))
@@ -61,8 +61,8 @@ fun CreateMarkerScreen(myViewModel: MyViewModel){
             painter = painterResource(id = R.drawable.camera),
             contentDescription = "Image",
             modifier = Modifier
-                .size(200.dp)
-                .clickable {  }
+                .size(100.dp)
+                .clickable { navigateCamera() }
         )
 
         Spacer(modifier = Modifier.height(15.dp))

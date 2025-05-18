@@ -2,8 +2,13 @@ package com.example.mapsapp.data
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.ui.text.input.KeyboardType.Companion.Email
 import com.example.mapsapp.BuildConfig
+import com.example.mapsapp.SupabaseApplication.Companion.supabase
+import com.example.mapsapp.utils.AuthState
 import io.github.jan.supabase.SupabaseClient
+import io.github.jan.supabase.auth.Auth
+import io.github.jan.supabase.auth.user.UserSession
 import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.postgrest.Postgrest
 import io.github.jan.supabase.postgrest.from
@@ -13,32 +18,20 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 
-class MySupabaseClient {
-    lateinit var client: SupabaseClient
-    lateinit var storage: Storage
+class MySupabaseClient(private val marcador : SupabaseClient) {
+    private var storage: Storage= marcador.storage
 
     private val supabaseUrl = BuildConfig.SUPABASE_URL
     private val supabaseKey = BuildConfig.SUPABASE_KEY
 
-    constructor() {
-        client = createSupabaseClient(
-            supabaseUrl = supabaseUrl,
-            supabaseKey = supabaseKey
-        ) {
-            install(Postgrest)
-            install(Storage)
-        }
-        storage = client.storage
-    }
-
     //SQL operations
     //Operacions SELECT
     suspend fun getAllMarkers(): List<Marker> {
-        return client.from("Markers").select().decodeList<Marker>()
+        return marcador.from("Markers").select().decodeList<Marker>()
     }
 
     suspend fun getMarker(id: String): Marker{
-        return client.from("Markers").select {
+        return marcador.from("Markers").select {
             filter {
                 eq("id", id)
             }
@@ -48,13 +41,13 @@ class MySupabaseClient {
     //Operació INSERT
     suspend fun insertMarker(name: String, description: String, latitude: Double, longitude: Double, imageName: String){
         val marker = Marker(name = name, description = description, latitude = latitude, longitude = longitude, image = imageName)
-        client.from("Markers").insert(marker)
+        marcador.from("Markers").insert(marker)
     }
 
     //Operació UPDATE
     suspend fun updateMarker(id: String, name: String, description: String, latitude: Double, longitude: Double, imageName: String, imageFile: ByteArray){
         val imageName = storage.from("images").update(path = imageName, data = imageFile)
-        client.from("Markers").update({
+        marcador.from("Markers").update({
             set("name", name)
             set("description", description)
             set("latitude", latitude)
@@ -65,7 +58,7 @@ class MySupabaseClient {
 
     //Operació DELETE
     suspend fun deleteMarker(id: String){
-        client.from("Markers").delete{ filter { eq("id", id) } }
+        marcador.from("Markers").delete{ filter { eq("id", id) } }
     }
 
     //Pujar imatge amb storage
@@ -82,6 +75,6 @@ class MySupabaseClient {
     //Eliminar una imatge
     suspend fun deleteImage(imageName: String){
         val imgName = imageName.removePrefix("https://aobflzinjcljzqpxpcxs.supabase.co/storage/v1/object/public/images/")
-        client.storage.from("images").delete(imgName)
+        marcador.storage.from("images").delete(imgName)
     }
 }

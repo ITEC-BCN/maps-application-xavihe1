@@ -30,9 +30,12 @@ import com.example.mapsapp.data.Marker
 import com.example.mapsapp.viewmodels.MyViewModel
 
 @Composable
-fun MarkerListScreen(myViewModel: MyViewModel) {
+fun MarkerListScreen(myViewModel: MyViewModel, navigateDetail: (Int) -> Unit) {
     val markers by myViewModel.markers.observeAsState(emptyList<Marker>())
-    myViewModel.getAllMarkers()
+
+    LaunchedEffect(markers) {
+        myViewModel.getAllMarkers()
+    }
 
     Column(
         modifier = Modifier.fillMaxSize()
@@ -53,7 +56,7 @@ fun MarkerListScreen(myViewModel: MyViewModel) {
                         Icon(imageVector = Icons.Default.Delete, contentDescription = "Delete")
                     }
                 }) {
-                    MarkerItem(marker)
+                    MarkerItem(marker, navigateDetail)
                 }
             }
         }
@@ -61,17 +64,18 @@ fun MarkerListScreen(myViewModel: MyViewModel) {
 }
 
 @Composable
-fun MarkerItem(marker: Marker) {
+fun MarkerItem(marker: Marker, navigateDetail: (Int) -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(7.dp)
             .clickable {
-
+                navigateDetail(marker.id!!)
             }
     ) {
         Row {
             Text(marker.name)
+            Text(marker.description)
         }
     }
 }

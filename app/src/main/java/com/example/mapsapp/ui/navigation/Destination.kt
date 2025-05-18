@@ -13,4 +13,16 @@ sealed class Destination {
 
     @Serializable
     object Markers: Destination() //Crear markers
+
+    @Serializable
+    object Login: Destination() //Login
+
+    @Serializable
+    object Register: Destination() //Register
+
+    @Serializable
+    object Camera: Destination() //Camera
+
+    @Serializable
+    data class Detail(val id: Int): Destination() //Detail marker
 }

@@ -28,7 +28,7 @@ fun DetailMarkerScreen(markerId: String, myViewModel: MyViewModel){
         TextField(value = markerName, onValueChange = { myViewModel.editMarkerName(it) })
         TextField(value = markerDescription, onValueChange = { myViewModel.editMarkerDescription(it) })
         Button(onClick = {
-            myViewModel.updateStudent(markerId, markerName, markerDescription, null) }
+            myViewModel.updateMarker(markerId, markerName, markerDescription, null) }
         ) {
             Text("Update")
         }
